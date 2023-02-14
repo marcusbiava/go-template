@@ -1,9 +1,12 @@
-ifneq (,$(wildcard ./.env))
-    include .env
-    export
-endif
+PROJECT_NAME := $(notdir $(lastword $(subst /, ,$(shell pwd))))
 
 go-mod-init:
-	go mod init $(MODULE)
+	go mod init github.com/marcusbiava/$(PROJECT_NAME)
+	go mod tidy
 
-.PHONY: go-mod-init	
+build:
+	go mod tidy
+	GOARCH=386 GOOS=linux go build -o $(PROJECT_NAME) ./cmd
+
+.PHONY: go-mod-init build
+
